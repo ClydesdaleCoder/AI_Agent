@@ -32,7 +32,27 @@ def get_files_info(working_directory, directory=None):
                 file_info = f'- {item}: file_size ={item_size} bytes, is_dir={dir_status}\n'
                 info_list = info_list + file_info
         except Exception as e: 
-            return f"Error: unexpected error occurred: {e}" 
+            return f"Error listing files: {e}" 
 
         return info_list
+
+
+def get_file_content(working_directory, file_path):
+    #checks file_path is a file
+    if os.path.isfile(file_path) == False: 
+        return f'Error: File not found or is not a regular file: "{file_path}"'
+
+    #checks the file_path is within the working directory
+    abs_working_directory = os.path.abspath(working_directory)
+    abs_working_path = os.path.abspath(file_path)
+    if abs_working_path.startswith(abs_working_directory) == False: 
+        return f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
+
+    else: 
+        try: 
+
+
+        except Exception as e: 
+            return ff"Error getting file information occurred: {e}"
+    
 
