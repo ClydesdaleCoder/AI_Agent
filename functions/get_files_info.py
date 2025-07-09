@@ -37,22 +37,5 @@ def get_files_info(working_directory, directory=None):
         return info_list
 
 
-def get_file_content(working_directory, file_path):
-    #checks file_path is a file
-    if os.path.isfile(file_path) == False: 
-        return f'Error: File not found or is not a regular file: "{file_path}"'
-
-    #checks the file_path is within the working directory
-    abs_working_directory = os.path.abspath(working_directory)
-    abs_working_path = os.path.abspath(file_path)
-    if abs_working_path.startswith(abs_working_directory) == False: 
-        return f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
-
-    else: 
-        try: 
-
-
-        except Exception as e: 
-            return ff"Error getting file information occurred: {e}"
     
 
