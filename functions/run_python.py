@@ -1,3 +1,5 @@
+import subprocess
+
 def run_python_file(working_directory, file_path, args=[]):
     
     #checks the file_path is within the working directory,exists,and is a python file
@@ -11,3 +13,13 @@ def run_python_file(working_directory, file_path, args=[]):
 
     if abs_working_path.endswith(".py") == False:
         return f'Error: "{file_path}" is not a Python file.'
+    else: 
+        try:
+            subprocess.run(
+                    file_path,
+                    args = args,
+                    timeout=30,
+                    
+            )
+        except Exception as e: 
+            f"Error: executing Python file: {e}"
