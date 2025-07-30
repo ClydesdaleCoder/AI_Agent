@@ -1,17 +1,18 @@
 # from subdirectory.filename import function_name
-from functions.get_files_info import get_files_info
-from functions.get_file_content import get_file_content
-from functions.write_file import write_file
+from functions.run_python import run_python_file
 
-print ("Result for calculator and lorem")
-result1 = write_file("calculator", "lorem.txt", "wait, this isn't lorem ipsum")
+print ("Result for calculator and main")
+result1 = run_python_file("calculator", "main.py")
 print (result1)
 
-print ("Result for pkg/morlorem file")
-result2 = write_file("calculator", "pkg/morelorem.txt", "lorem ipsum dolor sit amet")
+print ("Result for calculatore,main , 3+5 file")
+result2 = run_python_file("calculator", "main.py", ["3 + 5"])
 print (result2)
 
-print ("Result for /tmp/temp.txt file")
-result3 = write_file("calculator", "/tmp/temp.txt", "this should not be allowed")
+print ("Result for calculator and main file")
+result3 = run_python_file("calculator", "../main.py")
 print (result3)
 
+print ("Result for calculator and nonexistent file")
+result4 = run_python_file("calculator", "nonexistent.py")
+print (result4)
