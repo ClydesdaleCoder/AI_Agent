@@ -37,14 +37,18 @@ def main():
             model = 'gemini-2.0-flash-001',
             contents  = sys.argv[1], 
             config=types.GenerateContentConfig(
-                tools=[available_functions],system_instruction=system_prompt
+                tools=[available_functions],
+                system_instruction=system_prompt
                                                )
         )
 
 #checks if there are commands    
     
     if len(sys.argv) < 3:
-        print (response.text)
+        if response.candidates[0].content.parts[0].function_call:
+            function_call = response.candidates[0].content.parts[0].function_call
+            print (f'Calling function: {function_call.name}({function_call.args})')            
+        print (f'{response.text}')
 
 #loops through arguments to find the command
     for arg in sys.argv: 
