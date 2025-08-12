@@ -3,7 +3,7 @@ from google.genai import types
 
 schema_run_python_file = types.FunctionDeclaration(
     name="run_python_file",
-    description="Run a specified python file that is at the specified file path and working directory, using the given arguments.",
+    description="Run a specified python file that is at the specified file, constrained to the working directory, using the given arguments. Then return the output of the python function",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
