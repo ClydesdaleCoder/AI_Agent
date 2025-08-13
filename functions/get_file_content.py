@@ -2,15 +2,15 @@ import os
 from functions.config import MAX_CHARS
 from google.genai import types
 
-schema_get_files_content= types.FunctionDeclaration(
-    name="get_files_content",
-    description="Read and list the content of the specified file, constrained to the working directory.",
+schema_get_file_content= types.FunctionDeclaration(
+    name="get_file_content",
+    description="Read and print the content of the file in the specified file_path, constrained to the working_directory.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "directory": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
-                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
+                description="The the file that needs to have all the contents read and printed as stdo"
             ),
         },
     ),
