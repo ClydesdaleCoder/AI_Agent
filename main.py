@@ -43,9 +43,10 @@ def main():
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)])
     ]
+    generate_content(client,messages,verbose)
 
 #starts content generation
-
+def generate_content(client,messages,verbose):
     response = client.models.generate_content(
             model = 'gemini-2.0-flash-001',
             contents  = messages, 
@@ -57,7 +58,7 @@ def main():
 
 #checks if there are commands    
     if verbose:
-        print (f'User prompt: {user_prompt}')
+        print (f'User prompt: {messages}')
         print (f'Prompt tokens: {response.usage_metadata.prompt_token_count}')
         print (f'Response tokens: {response.usage_metadata.candidates_token_count}')
     
@@ -66,7 +67,46 @@ def main():
     else:
         for function_call_part in response.function_calls: 
             print (f'Calling functions: {function_call_part.name}({function_call_part.args}')
+            try:
+                call_function(function_call_part,)
+                if verbose:
+                    print(f"-> {function_call_result.parts[0].function_response.response}")
+
+            except not function_call_result.parts[0].function_response.response:
+                sys.exit(2)
+
+                    
+                
+                    
+def call_function(function_call_part, verbose=False):
+    if verbose: 
+        print(f"Calling function: {function_call_part.name}({function_call_part.args})")
+    else:
+        print(f" - Calling function: {function_call_part.name}")
     
+    if function_call_part.name in available_functions:
+        called_function = function_call_part.name
+        called_function(**{'working_directory':'./calculator'})
+        return types.Content(
+            role="tool",
+            parts=[
+            types.Part.from_function_response(
+                name=function_name,
+                response={"result": function_result},
+            )
+        ],
+    )
     
+    else: 
+        return types.Content(
+        role="tool",
+        parts=[
+            types.Part.from_function_response(
+                name=function_name,
+                response={"error": f"Unknown function: {function_name}"},
+            )
+        ],
+    )
+
 if __name__ == "__main__":
     main()
