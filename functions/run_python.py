@@ -3,17 +3,17 @@ from google.genai import types
 
 schema_run_python_file = types.FunctionDeclaration(
     name="run_python_file",
-    description="Run a specified python file that is at the specified file, constrained to the working directory, using the given arguments. Then return the output of the python function",
+    description="Run a specified python file that is at the specified file_path, constrained to the working directory, using any args given run without them if not specified. Then return the output of the python function",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "directory": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
-                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
+                description="The location of where the file that needs to be written  on is located.",
             ),
-            "python file": types.Schema(
+            "args": types.Schema(
                 type=types.Type.STRING,
-                description="The python file that has the python code needed to run these particular programs.",
+                description="The inputs used as the variables for the specific file paths",
             ),
         },
     ),

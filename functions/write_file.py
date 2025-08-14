@@ -3,13 +3,17 @@ from google.genai import types
 
 schema_write_file= types.FunctionDeclaration(
     name="write_file",
-    description="Write or overwrite content to the file, constrained to the working directory.",
+    description="Write or overwrite content to the file located in the file_path, constrained to the working directory.",
     parameters=types.Schema(
         type=types.Type.OBJECT,
         properties={
-            "directory": types.Schema(
+            "file_path": types.Schema(
                 type=types.Type.STRING,
-                description="The directory to list files from, relative to the working directory. If not provided, lists files in the working directory itself.",
+                description="The location of where the file that needs to be written  on is located",
+            ), 
+            "content": types.Schema(
+                type=types.Type.STRING,
+                description="The text that will be written onto the specified file",
             ),
         },
     ),
