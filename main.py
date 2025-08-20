@@ -50,6 +50,9 @@ def main():
             response_found = looped_content
         if loop_count >20: 
             raise Exception ("Agent has looped too much")
+        if looped_content != False:
+            print (looped_content)
+
     except Exception as e:
         return f"Error generating content: {e}"  
 
@@ -74,20 +77,18 @@ def generate_content(client,messages,verbose):
         print (f'Response tokens: {response.usage_metadata.candidates_token_count}')
     
     if not response.function_calls:
-        print (response.text)
         response_found = True 
+        return response.text
     else:
         response_found = False
         for function_call_part in response.function_calls: 
-            function_call_result = call_function(function_call_part,verbose)
-            user_response = types.Content(role= 'user' ,
-                                        parts= [function_call_result])
-            messages.append(user_response)
+            function_call_result = call_function(function_call_part,verbose) 
+            messages.append(function_call_result)
             if not function_call_result.parts[0].function_response.response:
                 raise Exception ( 'Function called did not return proper response')
             if verbose:
                 print(f"-> {function_call_result.parts[0].function_response.response}")
-    return response_found
+        return response_found
         
             
 
