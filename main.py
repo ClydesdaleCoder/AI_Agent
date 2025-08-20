@@ -22,9 +22,8 @@ All paths you provide should be relative to the working directory. You do not ne
 def main(): 
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
-
     client = genai.Client(api_key = api_key)
-
+    response_found = False
     verbose = '--verbose' in sys.argv
 
     args = []
@@ -43,10 +42,20 @@ def main():
     messages = [
         types.Content(role="user", parts=[types.Part(text=user_prompt)])
     ]
-    generate_content(client,messages,verbose)
+    try:
+        loop_count = 0
+        while loop_count <=20 and response_found ==False: 
+            looped_content = generate_content(client,messages,verbose)
+            loop_count += 1
+            response_found = looped_content
+        if loop_count >20: 
+            raise Exception ("Agent has looped too much")
+    except Exception as e:
+        return f"Error generating content: {e}"  
 
 #starts content generation
 def generate_content(client,messages,verbose):
+
     response = client.models.generate_content(
             model = 'gemini-2.0-flash-001',
             contents  = messages, 
@@ -55,6 +64,8 @@ def generate_content(client,messages,verbose):
                 system_instruction=system_prompt
                                                )
         )
+    for cc in response.candidates:
+        messages.append(cc.content)
 
 #checks if there are commands    
     if verbose:
@@ -64,14 +75,20 @@ def generate_content(client,messages,verbose):
     
     if not response.function_calls:
         print (response.text)
+        response_found = True 
     else:
+        response_found = False
         for function_call_part in response.function_calls: 
             function_call_result = call_function(function_call_part,verbose)
+            user_response = types.Content(role= 'user' ,
+                                        parts= [function_call_result])
+            messages.append(user_response)
             if not function_call_result.parts[0].function_response.response:
                 raise Exception ( 'Function called did not return proper response')
             if verbose:
                 print(f"-> {function_call_result.parts[0].function_response.response}")
-
+    return response_found
+        
             
 
                     
